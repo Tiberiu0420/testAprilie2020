@@ -20,7 +20,7 @@ public class Payment {
     private Float price;
     private Float reward;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id")
     private Trip trip;
 

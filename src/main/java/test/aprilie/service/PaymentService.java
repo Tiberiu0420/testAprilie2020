@@ -7,7 +7,9 @@ import java.util.List;
 public interface PaymentService {
     List<Payment> getPaymentsForDriver(Long driverId);
 
-    Payment getPayment(Long id);
+    Long createPreAuthorizePayment(Long tripId, Float price, String callbackURL);
 
-    Payment createPayment(Payment payment);
+    Long createConfirmationPayment(Long tripId, Float price, Float reward, String callbackURL);
+
+    Payment getPayment(Long id);
 }

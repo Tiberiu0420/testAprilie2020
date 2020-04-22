@@ -26,7 +26,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Trip acceptTrip(Long tripId, Long driverId) throws TripAlreadyAssignedException {
+    public Trip updateTripSetDriver(Long tripId, Long driverId) throws TripAlreadyAssignedException {
         Trip trip = tripRepository.findById(tripId).orElseThrow(EntityNotFoundException::new);
 
         if (trip.getDriver() != null) {

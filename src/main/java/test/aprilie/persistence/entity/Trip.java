@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -25,6 +26,9 @@ public class Trip {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id")
     private Driver driver;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
+    private List<Payment> payments;
 
     public Long getId() {
         return id;
@@ -64,5 +68,13 @@ public class Trip {
 
     public void setRating(Short rating) {
         this.rating = rating;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
     }
 }

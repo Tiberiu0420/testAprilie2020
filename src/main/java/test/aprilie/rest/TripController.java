@@ -33,7 +33,7 @@ public class TripController {
         return ResponseEntity.ok(trips.stream().map(this::mapTripToUI).collect(toList()));
     }
 
-    @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<TripUI> createTrip(@RequestBody TripUI newTripUI) {
         Trip createdTrip = tripService.createTrip(mapTripUIToEntity(newTripUI));
         return ResponseEntity.status(CREATED)
@@ -50,10 +50,11 @@ public class TripController {
         return ResponseEntity.ok(mapTripToUI(tripService.getTrip(id)));
     }
 
-    @PatchMapping(value = "trips/{tripId}/drivers/{driverId}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<TripUI> acceptTrip(@PathVariable Long tripId, @PathVariable Long driverId) {
+    @PatchMapping(value = "/{tripId}/accept", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<TripUI> updateTripSetDriver(@PathVariable Long tripId,
+                                                      @RequestParam("driverId") Long driverId) {
         try {
-            return ResponseEntity.ok(mapTripToUI(tripService.acceptTrip(tripId, driverId)));
+            return ResponseEntity.ok(mapTripToUI(tripService.updateTripSetDriver(tripId, driverId)));
         } catch (TripAlreadyAssignedException e) {
             return ResponseEntity.status(CONFLICT).build();
         }

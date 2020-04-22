@@ -8,7 +8,7 @@ import java.util.List;
 public interface TripService {
     Trip createTrip(Trip newTrip);
 
-    Trip acceptTrip(Long tripId, Long DriverId) throws TripAlreadyAssignedException;
+    Trip updateTripSetDriver(Long tripId, Long DriverId) throws TripAlreadyAssignedException;
 
     Trip rateTrip(Long tripId, short stars);
 

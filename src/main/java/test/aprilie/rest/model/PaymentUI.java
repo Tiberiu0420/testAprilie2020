@@ -1,16 +1,25 @@
 package test.aprilie.rest.model;
 
+import test.aprilie.persistence.entity.PaymentStatus;
+
 import java.time.LocalDateTime;
 
 public class PaymentUI {
+    private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
-
-    private String status;
+    private PaymentStatus status;
     private Float price;
     private Float reward;
+    private Long tripId;
 
-    private TripUI trip;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public LocalDateTime getStart() {
         return start;
@@ -28,11 +37,11 @@ public class PaymentUI {
         this.end = end;
     }
 
-    public String getStatus() {
+    public PaymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PaymentStatus status) {
         this.status = status;
     }
 
@@ -52,11 +61,11 @@ public class PaymentUI {
         this.reward = reward;
     }
 
-    public TripUI getTrip() {
-        return trip;
+    public Long getTripId() {
+        return tripId;
     }
 
-    public void setTrip(TripUI trip) {
-        this.trip = trip;
+    public void setTripId(Long tripId) {
+        this.tripId = tripId;
     }
 }
