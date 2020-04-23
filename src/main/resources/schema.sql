@@ -53,5 +53,5 @@ CREATE TABLE payments
     price   DECIMAL(5, 2),
     reward  DECIMAL(5, 2),
     trip_id INT,
-    FOREIGN KEY (trip_id) REFERENCES payments (id)
+    FOREIGN KEY (trip_id) REFERENCES trips (id)
 );

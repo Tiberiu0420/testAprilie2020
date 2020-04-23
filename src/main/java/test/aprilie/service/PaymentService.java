@@ -12,4 +12,6 @@ public interface PaymentService {
     Long createConfirmationPayment(Long tripId, Float price, Float reward, String callbackURL);
 
     Payment getPayment(Long id);
+
+    Float getAveragePriceForDriver(Long id);
 }

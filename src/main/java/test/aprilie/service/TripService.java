@@ -14,5 +14,13 @@ public interface TripService {
 
     Trip getTrip(Long tripId);
 
-    List<Trip> getTrips(Boolean unassigned);
+    List<Trip> getUnassignedTrips();
+
+    List<Trip> findByDriverId(Long driverId);
+
+    List<Trip> findAll();
+
+    Float getAverageRatingForDriver(Long id);
+
+
 }

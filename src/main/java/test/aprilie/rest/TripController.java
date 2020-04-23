@@ -28,8 +28,20 @@ public class TripController {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<TripUI>> getTrips(@RequestParam("unassigned") Boolean unassigned) {
-        List<Trip> trips = tripService.getTrips(unassigned);
+    public ResponseEntity<List<TripUI>> getTrips() {
+        List<Trip> trips = tripService.findAll();
+        return ResponseEntity.ok(trips.stream().map(this::mapTripToUI).collect(toList()));
+    }
+
+    @GetMapping(value = "/search/findUnassigned", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TripUI>> getUnassignedTrips() {
+        List<Trip> trips = tripService.getUnassignedTrips();
+        return ResponseEntity.ok(trips.stream().map(this::mapTripToUI).collect(toList()));
+    }
+
+    @GetMapping(value = "/search/findByDriverId", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TripUI>> findByDriverId(@RequestParam("driverId") Long driverId) {
+        List<Trip> trips = tripService.findByDriverId(driverId);
         return ResponseEntity.ok(trips.stream().map(this::mapTripToUI).collect(toList()));
     }
 

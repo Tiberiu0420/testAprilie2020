@@ -47,6 +47,11 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    @Override
+    public Float getAveragePriceForDriver(Long driverId) {
+        return paymentRepository.getAveragePriceForDriver(driverId);
+    }
+
     private Long createPayment(Long tripId, Float price, Float reward, PaymentStatus paymentStatus, String callbackURL) {
         Payment payment = new Payment();
         payment.setPrice(price);
@@ -60,6 +65,4 @@ public class PaymentServiceImpl implements PaymentService {
         runAsync(() -> paymentSimulatorService.simulatePayment(paymentId, callbackURL));
         return paymentId;
     }
-
-
 }

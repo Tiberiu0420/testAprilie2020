@@ -4,12 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import test.aprilie.persistence.entity.Car;
+import test.aprilie.persistence.entity.CarDriverHistory;
 import test.aprilie.persistence.entity.Driver;
 import test.aprilie.persistence.entity.Payment;
-import test.aprilie.rest.model.DriverUI;
-import test.aprilie.rest.model.NewPaymentUI;
-import test.aprilie.service.DriverService;
-import test.aprilie.service.PaymentService;
+import test.aprilie.rest.model.*;
+import test.aprilie.service.*;
 
 import java.util.List;
 
@@ -23,16 +23,23 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class DriverController {
     private final DriverService driverService;
     private final PaymentService paymentService;
+    private final CarService carService;
+    private final TripService tripService;
+    private final CarDriverHistoryService carDriverHistoryService;
 
-    public DriverController(DriverService driverService, PaymentService paymentService) {
+    public DriverController(DriverService driverService, PaymentService paymentService, TripService tripService,
+                            CarService carService, CarDriverHistoryService carDriverHistoryService) {
         this.driverService = driverService;
         this.paymentService = paymentService;
+        this.carService = carService;
+        this.tripService = tripService;
+        this.carDriverHistoryService = carDriverHistoryService;
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<DriverUI>> getDrivers() {
+    public ResponseEntity<List<DriverProfileUI>> getDrivers() {
         List<Driver> drivers = driverService.getAllDrivers();
-        return ResponseEntity.ok(drivers.stream().map(this::mapDriverToUI).collect(toList()));
+        return ResponseEntity.ok(drivers.stream().map(this::getDriverProfileUI).collect(toList()));
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -43,8 +50,20 @@ public class DriverController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<DriverUI> getDriver(@PathVariable Long id) {
-        return ResponseEntity.ok(mapDriverToUI(driverService.getDriver(id)));
+    public ResponseEntity<DriverProfileUI> getDriver(@PathVariable Long id) {
+        Driver driver = driverService.getDriver(id);
+        return ResponseEntity.ok(getDriverProfileUI(driver));
+    }
+
+    private DriverProfileUI getDriverProfileUI(Driver driver) {
+        DriverUI driverUI = mapDriverToUI(driver);
+        CarUI currentCar = carService.getByDriverId(driver.getId()).map(this::mapCarToUI).orElse(null);
+        List<CarDriverHistoryUI> carHistory = carDriverHistoryService.getByDriver(driver.getId())
+                .stream().map(this::mapCarDriverHistoryToUI).collect(toList());
+        Float averageRating = tripService.getAverageRatingForDriver(driver.getId());
+        Float averageTripPrice = paymentService.getAveragePriceForDriver(driver.getId());
+
+        return new DriverProfileUI(driverUI, currentCar, carHistory, averageRating, averageTripPrice);
     }
 
     @GetMapping(value = "/{id}/payments", produces = APPLICATION_JSON_VALUE)
@@ -63,5 +82,13 @@ public class DriverController {
 
     private Driver mapDriverUIToEntity(DriverUI driverUI) {
         return new ModelMapper().map(driverUI, Driver.class);
+    }
+
+    private CarUI mapCarToUI(Car car) {
+        return new ModelMapper().map(car, CarUI.class);
+    }
+
+    private CarDriverHistoryUI mapCarDriverHistoryToUI(CarDriverHistory carDriverHistory) {
+        return new ModelMapper().map(carDriverHistory, CarDriverHistoryUI.class);
     }
 }

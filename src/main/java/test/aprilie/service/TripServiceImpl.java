@@ -53,15 +53,22 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> getTrips(Boolean unassigned) {
-        if (unassigned == null) {
-            return tripRepository.findAll();
-        }
+    public List<Trip> getUnassignedTrips() {
+        return tripRepository.findByDriverNull();
+    }
 
-        if (unassigned) {
-            return tripRepository.findByDriverNull();
-        }
+    @Override
+    public List<Trip> findByDriverId(Long driverId) {
+        return tripRepository.findByDriverId(driverId);
+    }
 
-        return tripRepository.findByDriverNotNull();
+    @Override
+    public List<Trip> findAll() {
+        return tripRepository.findAll();
+    }
+
+    @Override
+    public Float getAverageRatingForDriver(Long driverId) {
+        return tripRepository.getAverageRatingForDriver(driverId);
     }
 }

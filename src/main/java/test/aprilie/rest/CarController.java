@@ -21,11 +21,17 @@ public class CarController {
         this.carService = carService;
     }
 
-    @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<CarUI> registerCar(@RequestBody CarUI carUI) {
         Car createdCar = carService.registerCar(mapCarUIToEntity(carUI));
         return ResponseEntity.status(CREATED)
                 .body(mapCarToUI(createdCar));
+    }
+
+    @PatchMapping(value = "/{carId}/assignDriver", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<CarUI> assignDriver(@PathVariable Long carId, @RequestParam("driverId") Long driverId) {
+        Car updatedCar = carService.assignDriver(carId, driverId);
+        return ResponseEntity.ok(mapCarToUI(updatedCar));
     }
 
     private CarUI mapCarToUI(Car trip) {
